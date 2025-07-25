@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P08
+Feature Type: gsr
+Number of Features: 24
+Emotion Scale: valence
+Model Type: svm
+Training set samples: 126 (Class 0: 72, Class 1: 54)
+Test set samples: 42 (Class 0: 24, Class 1: 18)
+
+--- Results ---
+Accuracy: 0.7143
+Precision: 0.7438
+Recall: 0.6806
+F1-Score: 0.6786
+Confusion Matrix:
+[[22  2]
+ [10  8]]

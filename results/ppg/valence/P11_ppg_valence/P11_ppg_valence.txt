@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P11
+Feature Type: ppg
+Number of Features: 28
+Emotion Scale: valence
+Model Type: svm
+Training set samples: 144 (Class 0: 81, Class 1: 63)
+Test set samples: 48 (Class 0: 27, Class 1: 21)
+
+--- Results ---
+Accuracy: 0.5833
+Precision: 0.6007
+Recall: 0.5979
+F1-Score: 0.5826
+Confusion Matrix:
+[[13 14]
+ [ 6 15]]

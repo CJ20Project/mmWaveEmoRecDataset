@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P14
+Feature Type: mmwave
+Number of Features: 32
+Emotion Scale: dominance
+Model Type: svm
+Training set samples: 162 (Class 0: 36, Class 1: 126)
+Test set samples: 54 (Class 0: 12, Class 1: 42)
+
+--- Results ---
+Accuracy: 0.7593
+Precision: 0.6692
+Recall: 0.6964
+F1-Score: 0.6790
+Confusion Matrix:
+[[ 7  5]
+ [ 8 34]]

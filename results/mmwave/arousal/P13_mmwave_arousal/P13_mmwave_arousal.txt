@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P13
+Feature Type: mmwave
+Number of Features: 32
+Emotion Scale: arousal
+Model Type: svm
+Training set samples: 144 (Class 0: 72, Class 1: 72)
+Test set samples: 48 (Class 0: 24, Class 1: 24)
+
+--- Results ---
+Accuracy: 0.6458
+Precision: 0.6525
+Recall: 0.6458
+F1-Score: 0.6419
+Confusion Matrix:
+[[13 11]
+ [ 6 18]]

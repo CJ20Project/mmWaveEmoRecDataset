@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P14
+Feature Type: ppg
+Number of Features: 28
+Emotion Scale: arousal
+Model Type: svm
+Training set samples: 153 (Class 0: 72, Class 1: 81)
+Test set samples: 51 (Class 0: 24, Class 1: 27)
+
+--- Results ---
+Accuracy: 0.5882
+Precision: 0.5863
+Recall: 0.5810
+F1-Score: 0.5778
+Confusion Matrix:
+[[11 13]
+ [ 8 19]]

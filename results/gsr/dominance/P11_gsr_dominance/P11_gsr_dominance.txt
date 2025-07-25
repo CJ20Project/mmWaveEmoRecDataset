@@ -1,0 +1,17 @@
+=== Metrics Summary ===
+Participant ID: P11
+Feature Type: gsr
+Number of Features: 24
+Emotion Scale: dominance
+Model Type: svm
+Training set samples: 144 (Class 0: 54, Class 1: 90)
+Test set samples: 48 (Class 0: 18, Class 1: 30)
+
+--- Results ---
+Accuracy: 0.6042
+Precision: 0.6217
+Recall: 0.6278
+F1-Score: 0.6026
+Confusion Matrix:
+[[13  5]
+ [14 16]]
