@@ -142,7 +142,7 @@ all_data_for_corr = [all_ratings_2d, all_orders_1d];
 % Remove any rows with NaN values (e.g., from participants skipped in metadata)
 all_data_for_corr(any(isnan(all_data_for_corr), 2), :) = [];
 % Calculate the 4x4 correlation matrix
-[R_interscale, P_interscale] = corr(all_data_for_corr);
+[R_interscale, P_interscale] = corr(all_data_for_corr, 'Type', 'Spearman');
 
 %% --- 4. REPORT RESULTS ---
 % This section outputs all calculated results to the command window in a clear format.
@@ -211,12 +211,11 @@ else
     end
 end
 
-% --- Correlation Between Emotion Scales ---
-% Update the correlation reporting section
+% --- Correlation Between Emotion Scales and Presentation Order ---
 fprintf('\n--- Correlation Between Emotion Scales and Presentation Order ---\n');
-fprintf('Pearson correlations (r) across all individual ratings:\n');
+fprintf('Spearman''s rank correlations (rho) across all individual ratings:\n');
 fprintf('------------------------------------------------------------\n');
-fprintf('%-30s   r-value   Significance\n', 'Comparison');
+fprintf('%-30s   rho-value   Significance\n', 'Comparison');
 fprintf('------------------------------------------------------------\n');
 % Define all pairs for correlation, now including the 4th variable (Order)
 pairs = {
@@ -230,12 +229,12 @@ pairs = {
 for i = 1:size(pairs, 1)
     comparison_name = pairs{i, 1};
     idx = pairs{i, 2};
-    r_value = R_interscale(idx(1), idx(2));
+    rho_value = R_interscale(idx(1), idx(2));
     p_value = P_interscale(idx(1), idx(2));
     
     stars = '';
     if p_value < 0.001, stars = '***'; elseif p_value < 0.01, stars = '**'; elseif p_value < 0.05, stars = '*'; end
-    fprintf('%-30s   %7.3f    %-5s\n', comparison_name, r_value, stars);
+    fprintf('%-30s   %7.3f    %-5s\n', comparison_name, rho_value, stars);
 end
 fprintf('------------------------------------------------------------\n');
 fprintf('Significance levels: * p < .05, ** p < .01, *** p < .001\n');
@@ -290,4 +289,3 @@ set(ax, 'FontSize', font_size_axis, 'LineWidth', 1, 'Layer', 'top');
 hold off;
 
 fprintf('Plotting complete.\n');
-
