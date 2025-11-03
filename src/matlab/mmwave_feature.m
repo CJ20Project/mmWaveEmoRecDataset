@@ -4,8 +4,6 @@
 % Read mmWave signals from "....\data\02_processed_data\mmwave", 
 % perform feature extraction, and save the feature matrices to "....\data\03_features\mmwave".
 
-tic;
-
 clc;
 clear;
 close all;
@@ -239,6 +237,3 @@ disp(' ');
 disp('=====================================');
 disp('  mmWave feature extraction complete');
 disp('=====================================');
-
-elapsedTime = toc;
-disp(['代码运行耗时: ', sprintf('%.4f', elapsedTime), ' 秒']);
