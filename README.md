@@ -37,7 +37,7 @@ The following is a brief description of each script in the order they are used i
 
 ### Python Scripts (`src/python/`)
 - **`classification.py`**: This script performs emotion classification using the participants' self-assessment scores for each clip as the ground truth. It uses the first 75% of the samples from all trials as the training set and the remaining 25% as the test set. Users can configure the signal type (mmWave, PPG, and GSR) in the global settings before running the script. Detailed results will be saved in the `results/` directory.
-- **`resultsSummary.py`**: This script aggregates the classification results and compares the accuracy and F1-scores for valence, arousal, and dominance across different signal types. The results are saved in a table named `resultsTable.txt` within the `results/` folder.
+- **`resultsSummary.py`**: This script aggregates the classification results and compares the accuracy, balanced accuracy and F1-scores for valence, arousal, and dominance across different signal types. The results are saved in a table named `resultsTable.txt` within the `results/` folder.
 
 
 
