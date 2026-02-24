@@ -20,12 +20,12 @@ def collect_results(base_path, feature_types, emotion_dimensions):
     
     Returns:
         A nested dictionary with the structure: 
-        {feature: {dimension: {'accuracies': [...], 'f1_scores': [...]}}}
+        {feature: {dimension: {'accuracies': [...], 'f1_scores': [...], 'bacc_scores': [...]}}}
     """
     # Initialize data storage structure
     all_results = {
         ft: {
-            dim: {'accuracies': [], 'f1_scores': []}
+            dim: {'accuracies': [], 'f1_scores': [], 'bacc_scores': []}
             for dim in emotion_dimensions
         }
         for ft in feature_types
@@ -66,6 +66,10 @@ def collect_results(base_path, feature_types, emotion_dimensions):
                             
                             all_results[feature][dimension]['accuracies'].append(accuracy)
                             all_results[feature][dimension]['f1_scores'].append(f1_score)
+                            
+                            if len(lines) >= 3:
+                                bacc_score = float(lines[2].strip())
+                                all_results[feature][dimension]['bacc_scores'].append(bacc_score)
                         else:
                             print(f"Warning: Incorrect file format, skipping: {f_path}")
                 except (IOError, ValueError) as e:
@@ -82,6 +86,7 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
     # Initialize dictionaries to hold table data
     accuracy_data = {dim.capitalize(): [] for dim in dimension_order}
     f1_score_data = {dim.capitalize(): [] for dim in dimension_order}
+    bacc_score_data = {dim.capitalize(): [] for dim in dimension_order}
 
     # Populate data
     for feature in feature_order:
@@ -90,6 +95,7 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
             # .get() with a default value handles cases where a feature or dimension was not found.
             accuracies = results_data.get(feature, {}).get(dimension, {}).get('accuracies', [])
             f1_scores = results_data.get(feature, {}).get(dimension, {}).get('f1_scores', [])
+            bacc_scores = results_data.get(feature, {}).get(dimension, {}).get('bacc_scores', [])
             
             # Calculate the mean of accuracies
             if accuracies:
@@ -104,6 +110,13 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
                 f1_score_data[dimension.capitalize()].append(f"{f1_mean:.3f}")
             else:
                 f1_score_data[dimension.capitalize()].append("N/A")
+                
+            # Calculate the mean of Balanced Accuracies
+            if bacc_scores:
+                bacc_mean = np.mean(bacc_scores)
+                bacc_score_data[dimension.capitalize()].append(f"{bacc_mean:.3f}")
+            else:
+                bacc_score_data[dimension.capitalize()].append("N/A")
 
     # Create Pandas DataFrames
     # Row index names and order
@@ -111,6 +124,7 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
     
     df_accuracy = pd.DataFrame(accuracy_data, index=index_labels)
     df_f1_score = pd.DataFrame(f1_score_data, index=index_labels)
+    df_bacc_score = pd.DataFrame(bacc_score_data, index=index_labels)
     
     # --- Print to Console ---
     print("\n" + "="*80)
@@ -119,7 +133,12 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
     print(df_accuracy)
     
     print("\n" + "="*80)
-    print("Table 2: Mean F1-Score of Each Feature for Different Emotion Scales")
+    print("Table 2: Mean Balanced Accuracy of Each Feature for Different Emotion Scales")
+    print("="*80)
+    print(df_bacc_score)
+
+    print("\n" + "="*80)
+    print("Table 3: Mean F1-Score of Each Feature for Different Emotion Scales")
     print("="*80)
     print(df_f1_score)
 
@@ -131,9 +150,16 @@ def generate_summary_tables(results_data, feature_order, dimension_order, output
             f.write("Table 1: Mean Accuracy of Each Feature for Different Emotion Scales\n")
             f.write("="*80 + "\n")
             f.write(df_accuracy.to_string())
+            
             f.write("\n\n\n")  # Add spacing between tables
             f.write("="*80 + "\n")
-            f.write("Table 2: Mean F1-Score of Each Feature for Different Emotion Scales\n")
+            f.write("Table 2: Mean Balanced Accuracy of Each Feature for Different Emotion Scales\n")
+            f.write("="*80 + "\n")
+            f.write(df_bacc_score.to_string())
+            
+            f.write("\n\n\n")  # Add spacing between tables
+            f.write("="*80 + "\n")
+            f.write("Table 3: Mean F1-Score of Each Feature for Different Emotion Scales\n")
             f.write("="*80 + "\n")
             f.write(df_f1_score.to_string())
         
