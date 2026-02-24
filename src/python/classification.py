@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix, balanced_accuracy_score
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline as SklearnPipeline
 
@@ -19,9 +19,9 @@ from sklearn.pipeline import Pipeline as SklearnPipeline
 # MODEL_TYPE = "random_forest"
 MODEL_TYPE = "svm"
 
-# FEATURE_TYPE = "mmwave"
+FEATURE_TYPE = "mmwave"
 # FEATURE_TYPE = "ppg"
-FEATURE_TYPE = "gsr"
+# FEATURE_TYPE = "gsr"
 
 # -----------------------------------------------------------------------------
 # Path Configuration
@@ -275,11 +275,13 @@ def train_and_evaluate_model_intra_video_split(features_list, labels_list, parti
     test_precision = precision_score(y_test, y_test_pred, average='macro', zero_division=zd_flag)
     test_recall = recall_score(y_test, y_test_pred, average='macro', zero_division=zd_flag)
     test_f1 = f1_score(y_test, y_test_pred, average='macro', zero_division=zd_flag)
+    test_bacc = balanced_accuracy_score(y_test, y_test_pred)
     test_cm = confusion_matrix(y_test, y_test_pred, labels=[0, 1])
     
     # Print evaluation results
     print(f"\n=== Results ===")
     print(f"Test Accuracy: {test_accuracy:.4f}")
+    print(f"Test Balanced Accuracy: {test_bacc:.4f}")
     print(f"Test Precision: {test_precision:.4f}")
     print(f"Test Recall: {test_recall:.4f}")
     print(f"Test F1-Score: {test_f1:.4f}")
@@ -292,6 +294,7 @@ def train_and_evaluate_model_intra_video_split(features_list, labels_list, parti
     results_summary = {
         'accuracy': float(test_accuracy),
         'f1_score': float(test_f1),
+        'balanced_accuracy': float(test_bacc),
     }
     
     base_filename_without_extension = f"{participant_id}_{feature_type_for_naming}_{emotion_scale}"
@@ -309,19 +312,21 @@ def train_and_evaluate_model_intra_video_split(features_list, labels_list, parti
         f_txt.write(f"{test_samples_info}\n\n")
         f_txt.write("--- Results ---\n")
         f_txt.write(f"Accuracy: {test_accuracy:.4f}\n")
+        f_txt.write(f"Balanced Accuracy: {test_bacc:.4f}\n")
         f_txt.write(f"Precision: {test_precision:.4f}\n")
         f_txt.write(f"Recall: {test_recall:.4f}\n")
         f_txt.write(f"F1-Score: {test_f1:.4f}\n")
         f_txt.write(f"Confusion Matrix:\n{np.array(test_cm)}\n")
     print(f"Metrics saved to txt file: {txt_filename}")
 
-    # --- Save a concise file with just accuracy and F1-score ---
+    # --- Save a concise file with just accuracy, F1-score and balanced accuracy ---
     acc_n_f1_filename = os.path.join(current_task_specific_folder_path, "ACCnF1.txt")
     try:
         with open(acc_n_f1_filename, 'w', encoding='utf-8') as f_acc_f1:
             f_acc_f1.write(f"{results_summary['accuracy']:.4f}\n")
             f_acc_f1.write(f"{results_summary['f1_score']:.4f}\n")
-        print(f"Concise accuracy and F1-score saved to: {acc_n_f1_filename}")
+            f_acc_f1.write(f"{results_summary['balanced_accuracy']:.4f}\n")
+        print(f"Concise metrics saved to: {acc_n_f1_filename}")
     except Exception as e:
         print(f"Error: Could not save ACCnF1.txt file: {e}")
 
@@ -394,3 +399,4 @@ if __name__ == "__main__":
             print(f"{'='*20} Finished processing: Participant {participant_id} - Feature {FEATURE_TYPE} - Scale {emotion_scale} {'='*20}\n")
     
     print("\nAll participants and emotion scales have been processed!\n")
+    
